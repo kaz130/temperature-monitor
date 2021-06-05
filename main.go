@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"golang.org/x/exp/io/i2c"
 	"github.com/maciej/bme280"
 )
 
 func main() {
+func readDevice() (temp, pressure, humidity) {
 	i2cAddr := 0x76
 	device, _ := i2c.Open(&i2c.Devfs{Dev: "/dev/i2c-1"}, i2cAddr)
 	driver := bme280.New(device)
@@ -18,6 +18,6 @@ func main() {
 		HumidityOversampling:    bme280.Oversampling16x,
 	})
 
-	response, _ := driver.Read()
-	fmt.Println(response)
+	r, _ = driver.Read()
+	return r.Temperature, r.Pressure, r.Humidity
 }
