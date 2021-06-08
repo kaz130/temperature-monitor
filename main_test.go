@@ -16,10 +16,8 @@ func TestGetTemp(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, 200, w.Code)
-	var response map[string]string
-	err := json.Unmarshal([]byte(w.Body.String()), &response)
-	_, exists := response["temp"]
+	var d SensingData
+	err := json.Unmarshal([]byte(w.Body.String()), &d)
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Nil(t, err)
-	assert.True(t, exists)
 }
