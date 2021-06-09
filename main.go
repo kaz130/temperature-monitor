@@ -14,12 +14,12 @@ type SensingData struct {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
-	t, p, h := readDevice()
+	d, _ := readDevice()
 	r.GET("/sensing", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"temperature": t,
-			"pressure": p,
-			"humidity": h,
+			"temperature": d.Temperature,
+			"pressure": d.Pressure,
+			"humidity": d.Humidity,
 		})
 	})
 	return r
@@ -30,11 +30,11 @@ func main() {
 	r.Run(":8080")
 }
 
-func readDevice() (t, p, h float64) {
+func readDevice() (SensingData, error) {
 	i2cAddr := 0x76
 	device, _ := i2c.Open(&i2c.Devfs{Dev: "/dev/i2c-1"}, i2cAddr)
 	driver := bme280.New(device)
-	err = driver.InitWith(bme280.ModeForced, bme280.Settings{
+	err := driver.InitWith(bme280.ModeForced, bme280.Settings{
 		Filter:                  bme280.FilterOff,
 		Standby:                 bme280.StandByTime1000ms,
 		PressureOversampling:    bme280.Oversampling16x,
@@ -42,12 +42,12 @@ func readDevice() (t, p, h float64) {
 		HumidityOversampling:    bme280.Oversampling16x,
 	})
 	if err != nil {
-		return err
+		return SensingData{}, err
 	}
 
 	r, err := driver.Read()
 	if err != nil {
-		return err
+		return SensingData{}, err
 	}
-	t, p, h = r.Temperature, r.Pressure, r.Humidity
+	return SensingData{r.Temperature, r.Pressure, r.Humidity}, nil
 }
