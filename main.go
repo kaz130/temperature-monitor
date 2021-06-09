@@ -30,19 +30,24 @@ func main() {
 	r.Run(":8080")
 }
 
-func readDevice() (temperature, pressure, humidity float64) {
+func readDevice() (t, p, h float64) {
 	i2cAddr := 0x76
 	device, _ := i2c.Open(&i2c.Devfs{Dev: "/dev/i2c-1"}, i2cAddr)
 	driver := bme280.New(device)
-	_ = driver.InitWith(bme280.ModeForced, bme280.Settings{
+	err = driver.InitWith(bme280.ModeForced, bme280.Settings{
 		Filter:                  bme280.FilterOff,
 		Standby:                 bme280.StandByTime1000ms,
 		PressureOversampling:    bme280.Oversampling16x,
 		TemperatureOversampling: bme280.Oversampling16x,
 		HumidityOversampling:    bme280.Oversampling16x,
 	})
+	if err != nil {
+		return err
+	}
 
-	r, _ := driver.Read()
-	temperature, pressure, humidity = r.Temperature, r.Pressure, r.Humidity
-	return
+	r, err := driver.Read()
+	if err != nil {
+		return err
+	}
+	t, p, h = r.Temperature, r.Pressure, r.Humidity
 }
