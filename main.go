@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"golang.org/x/exp/io/i2c"
 	"github.com/maciej/bme280"
 	"github.com/gin-gonic/gin"
@@ -14,9 +15,13 @@ type SensingData struct {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
-	d, _ := readDevice()
 	r.GET("/sensing", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+		d, err := readDevice()
+		if err != nil {
+			c.String(http.StatusInternalServerError, "error")
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{
 			"temperature": d.Temperature,
 			"pressure": d.Pressure,
 			"humidity": d.Humidity,
