@@ -21,3 +21,9 @@ func TestGetTemp(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 	assert.Nil(t, err)
 }
+
+func TestReadDevice(t *testing.T) {
+	_, err := readDevice()
+	assert.Nil(t, err)
+}
+
