@@ -37,9 +37,12 @@ func main() {
 
 func readDevice() (SensingData, error) {
 	i2cAddr := 0x76
-	device, _ := i2c.Open(&i2c.Devfs{Dev: "/dev/i2c-1"}, i2cAddr)
+	device, err := i2c.Open(&i2c.Devfs{Dev: "/dev/i2c-1"}, i2cAddr)
+	if err != nil {
+		return SensingData{}, err
+	}
 	driver := bme280.New(device)
-	err := driver.InitWith(bme280.ModeForced, bme280.Settings{
+	err = driver.InitWith(bme280.ModeForced, bme280.Settings{
 		Filter:                  bme280.FilterOff,
 		Standby:                 bme280.StandByTime1000ms,
 		PressureOversampling:    bme280.Oversampling16x,
