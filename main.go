@@ -1,16 +1,16 @@
 package main
 
 import (
-	"net/http"
-	"golang.org/x/exp/io/i2c"
-	"github.com/maciej/bme280"
 	"github.com/gin-gonic/gin"
+	"github.com/maciej/bme280"
+	"golang.org/x/exp/io/i2c"
+	"net/http"
 )
 
 type SensingData struct {
-	Temperature	float64	`json:"temperature"`
-	Pressure	float64 `json:"pressure"`
-	Humidity	float64	`json:"humidity"`
+	Temperature float64 `json:"temperature"`
+	Pressure    float64 `json:"pressure"`
+	Humidity    float64 `json:"humidity"`
 }
 
 func setupRouter() *gin.Engine {
@@ -23,8 +23,8 @@ func setupRouter() *gin.Engine {
 		}
 		c.JSON(http.StatusOK, gin.H{
 			"temperature": d.Temperature,
-			"pressure": d.Pressure,
-			"humidity": d.Humidity,
+			"pressure":    d.Pressure,
+			"humidity":    d.Humidity,
 		})
 	})
 	return r

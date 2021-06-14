@@ -1,11 +1,11 @@
 package main
 
 import (
-	"testing"
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
-	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestGetTemp(t *testing.T) {
@@ -26,4 +26,3 @@ func TestReadDevice(t *testing.T) {
 	_, err := readDevice()
 	assert.Nil(t, err)
 }
-
