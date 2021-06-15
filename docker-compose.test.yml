@@ -3,9 +3,6 @@ services:
   app:
     build: .
     container_name: monitor
-    ports:
-      - 8080:8080
     devices:  
       - "/dev/i2c-1:/dev/i2c-1"  
-    command: go run main.go
-
+    command: go test
