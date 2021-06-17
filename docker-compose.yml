@@ -3,6 +3,7 @@ services:
   app:
     build: .
     container_name: monitor
+    restart: always
     ports:
       - 8080:8080
     devices:  
@@ -10,3 +11,13 @@ services:
     command: go run main.go
     volumes:
       - .:/app
+
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: postgresql
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
